@@ -7,6 +7,7 @@ import sys
 # Settings
 app = Flask(__name__)
 app.config['DEBUG'] = True
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://localhost/appdb'
 db = SQLAlchemy(app)
 engine = create_engine('postgresql://localhost/appdb')
