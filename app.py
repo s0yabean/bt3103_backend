@@ -7,10 +7,10 @@ import sys
 # Settings
 app = Flask(__name__)
 app.config['DEBUG'] = True
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://localhost/appdb'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://ytsnozrropwoym:611808c63f96c74d7b755cebc8857cabac5b94215097046256d8cd6855323254@ec2-174-129-236-147.compute-1.amazonaws.com:5432/d7qvs0a0ed4uf'
 db = SQLAlchemy(app)
-engine = create_engine('postgresql://localhost/appdb')
+engine = create_engine('postgresql://ec2-174-129-236-147.compute-1.amazonaws.com:5432/d7qvs0a0ed4uf')
 
 class Post(db.Model):
     __tablename__ = 'post'
@@ -28,7 +28,6 @@ class Post(db.Model):
 def hello_world():
     return 'Hello, World!'
 
-#@app.route('/addpost', methods=['GET', 'POST'])
 @app.route('/addpost')
 def add_post():
     db.session.add(Post(id = 2, title = 'hello', post_text = 'hello world' ))
