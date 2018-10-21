@@ -2,15 +2,9 @@
 from flask import Flask, request, render_template, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import create_engine
-import sys
-
-###New Code#######
 import requests
 import json
-import time
-
-# New packages might have problems with heroku
-#############
+import sys
 
 # Settings
 app = Flask(__name__)
@@ -23,6 +17,7 @@ engine = create_engine('postgresql://ec2-174-129-236-147.compute-1.amazonaws.com
 class Post(db.Model):
     __tablename__ = 'post'
     id = db.Column(db.Integer(), primary_key=True)
+
     title = db.Column(db.String(80), unique=True)
     post_text = db.Column(db.String(255))
 
@@ -31,6 +26,40 @@ class Post(db.Model):
         self.title = title
         self.post_text = post_text
 
+class official_reviews(db.Model):
+    __tablename__ = 'official_reviews'
+
+    review_id = db.Column(db.String(100), primary_key=True)
+    student_token = db.Column(db.String(80))
+    m1 = db.Column(db.Integer())
+    m2 = db.Column(db.Integer())
+    m3 = db.Column(db.Integer())
+    m4c = db.Column(db.Integer())
+    m5c = db.Column(db.Integer())
+    mod_class_id = db.Column(db.String(80))
+    mod_class_name = db.Column(db.String(255))
+    mod_term = db.Column(db.Integer())
+    mod_ay = db.Column(db.Integer())
+    mod_sem = db.Column(db.Integer())
+    mod_rptterm = db.Column(db.Integer())
+    mod_module_code = db.Column(db.Integer())
+
+    def __init__(self, review_id, student_token, m1, m2, m3, m4c, m5c, mod_class_id, mod_class_name, mod_term, mod_ay, mod_sem ,mod_rptterm, mod_module_code):
+        
+        self.review_id = review_id
+        self.student_token = student_token
+        self.m1 = m1
+        self.m2 = m2
+        self.m3 = m3
+        self.m4c = m4c
+        self.m5c = m5c
+        self.mod_class_id = mod_class_id
+        self.mod_class_name = mod_class_name
+        self.mod_term = mod_term
+        self.mod_ay = mod_ay
+        self.mod_sem = mod_sem
+        self.mod_rptterm = mod_rptterm
+        self.mod_module_code = mod_module_code
 
 @app.route('/')
 def hello_world():
@@ -71,7 +100,28 @@ def test2():
         a = jsonify({"id": rowproxy[0]}) # for now is 1 string and 1 value
     return a
 
-###New Code#######
+@app.route('/')
+def test3():
+    b = db.session.execute("select id from post;").fetchall()
+    d, a = {}, []
+    for rowproxy in b:
+        a = jsonify({"id": rowproxy[0]}) # for now is 1 string and 1 value
+    return a
+
+@app.route('/<mod_id>/<chart>')
+def avgm1(mod_id, chart):
+    if chart == 'avgm1':
+        code = "'" + mod_id + "'"
+        query = "select avg(m1) from official_reviews where mod_class_id = " + code
+        b = db.session.execute(query).fetchall()
+        a = ''
+        for rowproxy in b:
+            a = a + ',' + {"id": round(rowproxy[0], 2)}.__str__()
+            a = a[1:]    
+        return jsonify(a)
+    return 'Chart code not found!'
+
+
 @app.route('/update')
 def update():
     incrementFirebaseCounter()
@@ -82,7 +132,6 @@ def incrementFirebaseCounter():
   value = json.loads(resp.text)['id']
   value = value
   resp2 = requests.put(url = 'https://bt3103-review-for-review.firebaseio.com/id.json', data = json.dumps({'id':value}))
-###New Code####### 
 
 if __name__ == '__main__':
     app.run()
