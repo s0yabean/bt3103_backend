@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+# Not being used now, only using if app.py gets too big and I needa separate into components
 
 from flask_sqlalchemy import SQLAlchemy
 
