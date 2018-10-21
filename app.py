@@ -7,6 +7,7 @@ import sys
 ###New Code#######
 import requests
 import json
+import time
 
 # New packages might have problems with heroku
 #############
@@ -37,6 +38,10 @@ def hello_world():
 
 @app.route('/js')
 def js():
+    return jsonify('{"id": 5}, {"id": 5}') 
+
+@app.route('/js2')
+def js2():
     return jsonify({"id": 5}, {"id": 5}) 
 
 @app.route('/<user_id>')
@@ -48,6 +53,14 @@ def add_post():
     db.session.add(Post(id = 2, title = 'hello', post_text = 'hello world' ))
     db.session.commit()
     return 'sent to database'
+
+@app.route('/test')
+def test():
+    b = db.session.execute("select id from post;").fetchall()
+    a = ''
+    for rowproxy in b:
+        a = a + ',' + {"id": rowproxy[0]}}
+    return jsonify(a)
 
 @app.route('/test2')
 def test2():
