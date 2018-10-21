@@ -4,6 +4,13 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import create_engine
 import sys
 
+###New Code#######
+import requests
+import json
+
+# New packages might have problems with heroku
+#############
+
 # Settings
 app = Flask(__name__)
 app.config['DEBUG'] = True
@@ -28,7 +35,15 @@ class Post(db.Model):
 def hello_world():
     return 'Hello, World!'
 
-@app.route('/addpost')
+@app.route('/js')
+def js():
+    return jsonify({"id": 5}, {"id": 5}) 
+
+@app.route('/<user_id>')
+def hello_module(user_id):
+    return 'Hello ' +  user_id
+   
+@app.route('/addpost') 
 def add_post():
     db.session.add(Post(id = 2, title = 'hello', post_text = 'hello world' ))
     db.session.commit()
@@ -36,11 +51,24 @@ def add_post():
 
 @app.route('/test2')
 def test2():
-    b = db.session.execute("select id from post limit 1;").fetchall()
+    b = db.session.execute("select id from post;").fetchall()
     d, a = {}, []
     for rowproxy in b:
-        a = jsonify({"id": rowproxy[0]})
-        return a
+        a = jsonify({"id": rowproxy[0]}) # for now is 1 string and 1 value
+    return a
+
+###New Code#######
+@app.route('/update')
+def update():
+    incrementFirebaseCounter()
+    return 'updated firebase!'
+
+def incrementFirebaseCounter():
+  resp = requests.get(url="https://bt3103-final-project.herokuapp.com/test2")
+  value = json.loads(resp.text)['id']
+  value = value
+  resp2 = requests.put(url = 'https://bt3103-review-for-review.firebaseio.com/id.json', data = json.dumps({'id':value}))
+###New Code####### 
 
 if __name__ == '__main__':
     app.run()
