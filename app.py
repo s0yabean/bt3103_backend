@@ -59,7 +59,8 @@ def test():
     b = db.session.execute("select id from post;").fetchall()
     a = ''
     for rowproxy in b:
-        a = a + ',' + {"id": rowproxy[0]}}
+        a = a + ',' + {"id": rowproxy[0]}.__str__()
+    a = a[1:]    
     return jsonify(a)
 
 @app.route('/test2')
