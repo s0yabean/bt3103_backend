@@ -94,7 +94,7 @@ def test():
 
 @app.route('/test2')
 def test2():
-    b = db.session.execute("select id from post;").fetchall()
+    b = db.session.execute("select count(*) from official_reivews;").fetchall()
     d, a = {}, []
     for rowproxy in b:
         a = jsonify({"id": rowproxy[0]}) # for now is 1 string and 1 value
