@@ -116,7 +116,7 @@ def avgm1(mod_id, chart):
         b = db.session.execute(query).fetchall()
         a = ''
         for rowproxy in b:
-            a = a + ',' + {"id": round(rowproxy[0], 2)}.__str__()
+            a = a + ',' + {"id": rowproxy[0]}.__str__()
             a = a[1:]    
         return jsonify(a)
     return 'Chart code not found!'
