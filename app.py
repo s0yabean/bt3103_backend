@@ -65,23 +65,9 @@ class official_reviews(db.Model):
 def hello_world():
     return 'Hello, World!'
 
-@app.route('/js')
-def js():
-    return jsonify('{"id": 5}, {"id": 5}') 
-
-@app.route('/js2')
-def js2():
-    return jsonify({"id": 5}, {"id": 5}) 
-
 @app.route('/<user_id>')
 def hello_module(user_id):
     return 'Hello ' +  user_id
-   
-@app.route('/addpost') 
-def add_post():
-    db.session.add(Post(id = 2, title = 'hello', post_text = 'hello world' ))
-    db.session.commit()
-    return 'sent to database'
 
 @app.route('/test')
 def test():
@@ -94,7 +80,7 @@ def test():
 
 @app.route('/test2')
 def test2():
-    b = db.session.execute("select count(*) from official_reivews;").fetchall()
+    b = db.session.execute("select count(*) from official_reviews;").fetchall()
     d, a = {}, []
     for rowproxy in b:
         a = jsonify({"id": rowproxy[0]}) # for now is 1 string and 1 value
