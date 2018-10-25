@@ -10,6 +10,12 @@ from models import db, create_engine
 # Above line needs to be after app is created as models.py needs app. 
 # Somewhat a circular dependency but done to make files more compact
 
+from flask import Response
+
+@app.route("/hello")
+def route1():
+    dict1 = {"prop1": "p1", "prop2": "p2"}
+    return Response(json.dumps(dict1), mimetype='application/json')
 
 # Routes 
 @app.route('/')
@@ -26,7 +32,13 @@ def test2():
     d, a = {}, []
     for rowproxy in b:
         a = jsonify({"id": rowproxy[0]}) # for now is 1 string and 1 value
-    return render_template('index.html', item = a)
+    return a
+
+@app.route('/test5')
+def test5():
+    b = db.session.execute("select count(*) from unofficial_reviews;").fetchall()
+    data = map(list, b)
+    return render_template('index.html', item = data)
 
 @app.route('/test3')
 def test3():
@@ -42,6 +54,7 @@ def test4():
     for rowproxy in b:
         a = jsonify(rowproxy[0]) # for now is 1 string and 1 value
     return a
+
 
 # Does not work in Vue calls
 #@app.route('/test3')
