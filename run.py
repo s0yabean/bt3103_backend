@@ -21,7 +21,7 @@ def hello_module(user_id):
 
 @app.route('/test2')
 def test2():
-    b = db.session.execute("select count(*) from official_reviews;").fetchall()
+    b = db.session.execute("select count(*) from unofficial_reviews;").fetchall()
     d, a = {}, []
     for rowproxy in b:
         a = jsonify({"id": rowproxy[0]}) # for now is 1 string and 1 value
