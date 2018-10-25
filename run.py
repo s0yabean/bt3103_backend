@@ -10,6 +10,7 @@ from models import db, create_engine
 # Above line needs to be after app is created as models.py needs app. 
 # Somewhat a circular dependency but done to make files more compact
 
+
 # Routes 
 @app.route('/')
 def hello_world():
@@ -25,14 +26,15 @@ def test2():
     d, a = {}, []
     for rowproxy in b:
         a = jsonify({"id": rowproxy[0]}) # for now is 1 string and 1 value
-    return a
+    return render_template('index.html', item = a)
 
 @app.route('/test3')
 def test3():
     b = db.session.execute("select count(*) from unofficial_reviews;").fetchall()
     for rowproxy in b:
-        a = jsonify([{"id": rowproxy[0]}]) # for now is 1 string and 1 value
-    return a
+        a = {"id": rowproxy[0]} # for now is 1 string and 1 value
+    return render_template('index.html', item = a)
+    #return json.dumps(a), 200, 'application/json'
 
 @app.route('/test4')
 def test4():
