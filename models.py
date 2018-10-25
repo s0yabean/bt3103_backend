@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-# In heroku __main__ has to be run. Lots of hassle.
-from __main__ import app
+# In heroku __main__ has to be run, not __main__ as in local development.
+from run import app
 # from run import app 
 # ^ In Heroku Only
 
