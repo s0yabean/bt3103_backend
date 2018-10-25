@@ -29,11 +29,28 @@ def test2():
 
 @app.route('/test3')
 def test3():
-    b = db.session.execute("select id from post;").fetchall()
-    d, a = {}, []
+    b = db.session.execute("select count(*) from unofficial_reviews;").fetchall()
     for rowproxy in b:
-        a = jsonify({"id": rowproxy[0]}) # for now is 1 string and 1 value
+        a = jsonify([{"id": rowproxy[0]}]) # for now is 1 string and 1 value
     return a
+
+@app.route('/test4')
+def test4():
+    b = db.session.execute("select count(*) from unofficial_reviews;").fetchall()
+    for rowproxy in b:
+        a = jsonify(rowproxy[0]) # for now is 1 string and 1 value
+    return a
+
+# Does not work in Vue calls
+#@app.route('/test3')
+#def test3():
+#    x = 1
+#    def add(x):
+#        x = x + 2
+#        return x
+
+#    x = add(x)
+#    return jsonify(x)
     
 @app.route('/<mod_id>/<chart>')
 def avgm1(mod_id, chart):
