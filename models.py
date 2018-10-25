@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from __main__ import app
+from run import app
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import create_engine
 
