@@ -39,7 +39,7 @@ def test():
 
 @app.route('/test2')
 def test2():
-    resultproxy = db.session.execute("select round(avg(m2), 2) from official_reviews;").fetchall()
+    resultproxy = db.session.execute("select round(avg(m2), 2) as value from official_reviews;").fetchall()
     d, a = {}, {}
     for rowproxy in resultproxy:
         for tup in rowproxy.items():
@@ -51,13 +51,13 @@ def test2():
 def avgm1(mod_id, chart):
     if chart == 'avgm1':
         code = "'" + mod_id + "'"
-        query = "select avg(m1) from official_reviews where mod_class_id = " + code
-        b = db.session.execute(query).fetchall()
+        query = "select round(avg(m2), 2) as value from official_reviews where mod_class_id = " + code
+        resultproxy = db.session.execute(query).fetchall()
         d, a = {}, {}
-    for rowproxy in resultproxy:
-        for tup in rowproxy.items():
-            d = {**d, **{tup[0]: tup[1]}}
-        a.update(d)
+        for rowproxy in resultproxy:
+            for tup in rowproxy.items():
+                d = {**d, **{tup[0]: tup[1]}}
+            a.update(d)
     return Response(json.dumps(a), mimetype='application/json')
 
 if __name__ == '__main__':
