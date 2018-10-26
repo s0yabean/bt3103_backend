@@ -1,5 +1,5 @@
 
-from flask import Flask, request, render_template, jsonify
+from flask import Flask, request, jsonify
 import requests
 import json
 import sys
@@ -28,25 +28,24 @@ def hello_module(user_id):
 
 @app.route('/test2')
 def test2():
-    b = db.session.execute("select count(*) from unofficial_reviews;").fetchall()
+    resultproxy = db.session.execute("select count(*) from official_reviews;").fetchall()
     d, a = {}, []
-    for rowproxy in b:
-        a = jsonify({"id": rowproxy[0]}) # for now is 1 string and 1 value
-    return a
+    for rowproxy in resultproxy:
+        for tup in rowproxy.items():
+            d = {**d, **{tup[0]: tup[1]}}
+        a.append(d)
+    return Response(json.dumps(a), mimetype='application/json')
 
-@app.route('/test5')
-def test5():
-    b = db.session.execute("select count(*) from unofficial_reviews;").fetchall()
-    data = map(list, b)
-    return render_template('index.html', item = data)
-
-@app.route('/test3')
-def test3():
-    b = db.session.execute("select count(*) from unofficial_reviews;").fetchall()
-    for rowproxy in b:
-        a = {"id": rowproxy[0]} # for now is 1 string and 1 value
-    return render_template('index.html', item = a)
-    #return json.dumps(a), 200, 'application/json'
+@app.route('/test')
+def test():
+        query = "select avg(m1), avg(m2) from official_reviews;"
+        b = db.session.execute(query).fetchall()
+        a = ''
+        for rowproxy in b:
+            a = a + ',' + {"id": rowproxy[0]}.__str__()
+            a = a[1:]    
+        result = json.dumps(a)
+        return Response(result, mimetype='application/json')
 
 @app.route('/test4')
 def test4():
@@ -55,18 +54,6 @@ def test4():
         a = jsonify(rowproxy[0]) # for now is 1 string and 1 value
     return a
 
-
-# Does not work in Vue calls
-#@app.route('/test3')
-#def test3():
-#    x = 1
-#    def add(x):
-#        x = x + 2
-#        return x
-
-#    x = add(x)
-#    return jsonify(x)
-    
 @app.route('/<mod_id>/<chart>')
 def avgm1(mod_id, chart):
     if chart == 'avgm1':
@@ -80,17 +67,6 @@ def avgm1(mod_id, chart):
         return jsonify(a)
     #return jsonify(query)
     #return 'Chart code not found!'
-
-@app.route('/update')
-def update():
-    incrementFirebaseCounter()
-    return 'updated firebase!'
-
-def incrementFirebaseCounter():
-  resp = requests.get(url="https://bt3103-final-project.herokuapp.com/test2")
-  value = json.loads(resp.text)['id']
-  value = value
-  resp2 = requests.put(url = 'https://bt3103-review-for-review.firebaseio.com/id.json', data = json.dumps({'id':value}))
 
 if __name__ == '__main__':
     app.run()
