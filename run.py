@@ -26,19 +26,9 @@ def hello_world():
 def hello_module(user_id):
     return 'Hello ' +  user_id
 
-@app.route('/test2')
-def test2():
-    resultproxy = db.session.execute("select count(*) from official_reviews;").fetchall()
-    d, a = {}, []
-    for rowproxy in resultproxy:
-        for tup in rowproxy.items():
-            d = {**d, **{tup[0]: tup[1]}}
-        a.append(d)
-    return Response(json.dumps(a), mimetype='application/json')
-
 @app.route('/test')
 def test():
-    resultproxy = db.session.execute("select count(*) from official_reviews;").fetchall()
+    resultproxy = db.session.execute("select count(*), avg(m1) from official_reviews;").fetchall()
     d, a = {}, {}
     for rowproxy in resultproxy:
         for tup in rowproxy.items():
@@ -48,7 +38,7 @@ def test():
 
 @app.route('/test4')
 def test4():
-    resultproxy = db.session.execute("select count(*) from official_reviews;").fetchall()
+    resultproxy = db.session.execute("select count(*), avg(m1)  from official_reviews;").fetchall()
     d, a = {}, {}
     for rowproxy in resultproxy:
         for tup in rowproxy.items():
@@ -67,8 +57,6 @@ def avgm1(mod_id, chart):
             a = a + ',' + {"id": rowproxy[0]}.__str__()
             a = a[1:]    
         return jsonify(a)
-    #return jsonify(query)
-    #return 'Chart code not found!'
 
 if __name__ == '__main__':
     app.run()
