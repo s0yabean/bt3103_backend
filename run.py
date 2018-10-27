@@ -2,6 +2,7 @@
 from flask import Flask, request, jsonify
 import simplejson as json
 import requests
+#import json
 import sys
 
 # Settings
@@ -46,7 +47,7 @@ def mother_function(mod_id, chart):
         a = run_sql(query)
     if chart == 'snt_spd':
         code = "'" + mod_id + "'"
-        query = 'select avg(SUBSTRING(m4c,11,2)::int + SUBSTRING(m5c,10,2)::int) from official_reviews where mod_class_id=' + code
+        query = 'select avg(SUBSTRING(m4c,11,2)::int + SUBSTRING(m5c,10,2)::int) as value from official_reviews where mod_class_id=' + code
         a = run_sql(query)
     return Response(json.dumps(a), mimetype='application/json')
 
