@@ -13,32 +13,23 @@ from models import db, create_engine
 
 from flask import Response
 
-@app.route("/hello")
-def route1():
-    dict1 = {"prop1": "p1", "prop2": "p2"}
-    return Response(json.dumps(dict1), mimetype='application/json')
+# Function to run SQL query and take output
+def run_sql(query):
+    resultproxy = db.session.execute(query).fetchall()
+    d, a = {}, {}
+    for rowproxy in resultproxy:
+        for tup in rowproxy.items():
+            d = {**d, **{tup[0]: tup[1]}}
+        a.update(d)
+    return a
 
 # Routes 
 @app.route('/')
 def hello_world():
     return 'Hello, World!'
 
-@app.route('/<user_id>')
-def hello_module(user_id):
-    return 'Hello ' +  user_id
-
 @app.route('/test')
 def test():
-    resultproxy = db.session.execute("select round(avg(m2), 2), count(*) from official_reviews;").fetchall()
-    d, a = {}, {}
-    for rowproxy in resultproxy:
-        for tup in rowproxy.items():
-            d = {**d, **{tup[0]: tup[1]}}
-        a.update(d)
-    return Response(json.dumps(a), mimetype='application/json')
-
-@app.route('/test2')
-def test2():
     resultproxy = db.session.execute("select round(avg(m2), 2) as value from official_reviews;").fetchall()
     d, a = {}, {}
     for rowproxy in resultproxy:
@@ -47,17 +38,13 @@ def test2():
         a.update(d)
     return Response(json.dumps(a), mimetype='application/json')    
 
+# Mother of all functions
 @app.route('/<mod_id>/<chart>')
-def avgm1(mod_id, chart):
-    if chart == 'avgm1':
+def mother_function(mod_id, chart):
+    if chart == 'exp_grade':
         code = "'" + mod_id + "'"
-        query = "select round(avg(m2), 2) as value from official_reviews where mod_class_id = " + code
-        resultproxy = db.session.execute(query).fetchall()
-        d, a = {}, {}
-        for rowproxy in resultproxy:
-            for tup in rowproxy.items():
-                d = {**d, **{tup[0]: tup[1]}}
-            a.update(d)
+        query = 'select m2, count(review_id) from official_reviews where mod_class_id=' + code + ' group by m2;'
+        run_sql(query)
     return Response(json.dumps(a), mimetype='application/json')
 
 if __name__ == '__main__':
