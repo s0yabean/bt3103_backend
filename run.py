@@ -38,18 +38,85 @@ def test():
         a.update(d)
     return Response(json.dumps(a), mimetype='application/json')    
 
+# # Mother of all functions
+# @app.route('/<mod_id>/<chart>')
+# def mother_function(mod_id, chart):
+#     if chart == 'diff_spd':
+#         code = "'" + mod_id + "'"
+#         query = 'select round(avg(m2), 2) as value from official_reviews where mod_class_id=' + code 
+#         a = run_sql(query)
+#     if chart == 'snt_spd':
+#         code = "'" + mod_id + "'"
+#         query = 'select round(avg(SUBSTRING(m4c,11,2)::int + SUBSTRING(m5c,10,2)::int), 2) as value from official_reviews where mod_class_id=' + code
+#         a = run_sql(query)
+#     return Response(json.dumps(a), mimetype='application/json')
+
 # Mother of all functions
 @app.route('/<mod_id>/<chart>')
 def mother_function(mod_id, chart):
-    if chart == 'diff_spd':
+
+    if chart == 'diff_spd': #difficulty level speedometer
         code = "'" + mod_id + "'"
         query = 'select round(avg(m2), 2) as value from official_reviews where mod_class_id=' + code 
         a = run_sql(query)
-    if chart == 'snt_spd':
+
+    if chart == 'snt_spd': #sentiment speedometer
         code = "'" + mod_id + "'"
-        query = 'select round(avg(SUBSTRING(m4c,11,2)::int + SUBSTRING(m5c,10,2)::int), 2) as value from official_reviews where mod_class_id=' + code
+        query = 'select avg((SUBSTRING(m4c,11,2)::int + SUBSTRING(m5c,10,2)::int)/2) as value from official_reviews where mod_class_id=' + code
         a = run_sql(query)
+    
+    if chart == 'overall_1': #overall opinion  (poor)
+        code = "'" + mod_id + "'"
+        query = 'Select count(review_id) as count from official_reviews where m1=1 and mod_class_id=' + code
+        a = run_sql(query)
+
+    if chart == 'overall_2': #overall opinion  (unsatisfactory)
+        code = "'" + mod_id + "'"
+        query = 'Select count(review_id) as count from official_reviews where m1=2 and mod_class_id=' + code
+        a = run_sql(query)
+
+    if chart == 'overall_3': #overall opinion  (satisfactory)
+        code = "'" + mod_id + "'"
+        query = 'Select count(review_id) as count from official_reviews where m1=3 and mod_class_id=' + code
+        a = run_sql(query)
+
+    if chart == 'overall_4': #overall opinion  (good)
+        code = "'" + mod_id + "'"
+        query = 'Select count(review_id) as count from official_reviews where m1=4 and mod_class_id=' + code
+        a = run_sql(query)
+
+    if chart == 'overall_5': #overall opinion  (excellent)
+        code = "'" + mod_id + "'"
+        query = 'Select count(review_id) as count from official_reviews where m1=5 and mod_class_id=' + code
+        a = run_sql(query)
+    
+    if chart == 'exp_1': #expected grade (A)
+        code = "'" + mod_id + "'"
+        query = 'Select count(review_id) as Expected_Count from official_reviews where m2=1 and mod_class_id=' + code
+        a = run_sql(query)
+  
+    if chart == 'exp_2': #expected grade (B)
+        code = "'" + mod_id + "'"
+        query = 'Select count(review_id) as Expected_Count from official_reviews where m2=2 and mod_class_id=' + code
+        a = run_sql(query)
+
+    if chart == 'exp_3': #expected grade (C)
+        code = "'" + mod_id + "'"
+        query = 'Select count(review_id) as Expected_Count from official_reviews where m2=3 and mod_class_id=' + code
+        a = run_sql(query)
+
+    if chart == 'exp_4': #expected grade (D)
+        code = "'" + mod_id + "'"
+        query = 'Select count(review_id) as Expected_Count from official_reviews where m2=4 and mod_class_id=' + code
+        a = run_sql(query)
+
+    if chart == 'exp_5': #expected grade (F)
+        code = "'" + mod_id + "'"
+        query = 'Select count(review_id) as Expected_Count from official_reviews where m2=5 and mod_class_id=' + code
+        a = run_sql(query)
+
     return Response(json.dumps(a), mimetype='application/json')
+
 
 if __name__ == '__main__':
     app.run()
