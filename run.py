@@ -62,7 +62,7 @@ def mother_function(mod_id, chart):
 
     if chart == 'snt_spd': #sentiment speedometer
         code = "'" + mod_id + "'"
-        query = 'select avg((SUBSTRING(m4c,11,2)::int + SUBSTRING(m5c,10,2)::int)/2) as value from official_reviews where mod_class_id=' + code
+        query = 'select round(avg((SUBSTRING(m4c,11,2)::int + SUBSTRING(m5c,10,2)::int)/2),2) as value from official_reviews where mod_class_id=' + code
         a = run_sql(query)
     
     if chart == 'overall_1': #overall opinion  (poor)
