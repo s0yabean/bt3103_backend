@@ -1,4 +1,3 @@
-
 from flask import Flask, request, jsonify
 import simplejson as json
 import requests
@@ -113,6 +112,31 @@ def mother_function(mod_id, chart):
     if chart == 'exp_5': #expected grade (F)
         code = "'" + mod_id + "'"
         query = 'Select count(review_id) as Expected_Count from official_reviews where m2=5 and mod_class_id=' + code
+        a = run_sql(query)
+
+    if chart == 'act_1': #actual grade (A)
+        code = "'" + mod_id + "'"
+        query = 'Select count(review_id) as actual_count from official_reviews where actual_grade=1 and mod_class_id=' + code
+        a = run_sql(query)
+  
+    if chart == 'act_2': #actual grade (B)
+        code = "'" + mod_id + "'"
+        query = 'Select count(review_id) as actual_count from official_reviews where actual_grade=2 and mod_class_id=' + code
+        a = run_sql(query)
+
+    if chart == 'act_3': #actual grade (C)
+        code = "'" + mod_id + "'"
+        query = 'Select count(review_id) as actual_count from official_reviews where actual_grade=3 and mod_class_id=' + code
+        a = run_sql(query)
+
+    if chart == 'act_4': #actual grade (D)
+        code = "'" + mod_id + "'"
+        query = 'Select count(review_id) as actual_count from official_reviews where actual_grade=4 and mod_class_id=' + code
+        a = run_sql(query)
+
+    if chart == 'act_5': #actual grade (F)
+        code = "'" + mod_id + "'"
+        query = 'Select count(review_id) as actual_count from official_reviews where actual_grade=5 and mod_class_id=' + code
         a = run_sql(query)
 
     return Response(json.dumps(a), mimetype='application/json')
