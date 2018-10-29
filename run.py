@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 import simplejson as json
 import requests
 #import json
@@ -6,6 +7,7 @@ import sys
 
 # Settings
 app = Flask(__name__)
+CORS(app)
 from models import db, create_engine
 # Above line needs to be after app is created as models.py needs app. 
 # Somewhat a circular dependency but done to make files more compact
@@ -51,7 +53,7 @@ def test():
 #     return Response(json.dumps(a), mimetype='application/json')
 
 # Mother of all functions
-@app.route('/<mod_id>/<chart>')
+@app.route('/<mod_id>/<chart>', methods = ['GET'])
 def mother_function(mod_id, chart):
 
     if chart == 'diff_spd': #difficulty level speedometer
