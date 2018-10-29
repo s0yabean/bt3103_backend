@@ -6,3 +6,4 @@ psycopg2==2.7.3.2
 requests==2.11.1
 jsonschema==2.6.0
 simplejson==3.16.0
+flask_cors==3.0.6
