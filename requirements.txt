@@ -3,7 +3,7 @@ Flask-SQLAlchemy==2.3.2
 SQLAlchemy==1.1.14
 gunicorn==19.5.0
 psycopg2==2.7.3.2
-requests==2.11.1
+requests==2.20.0
 jsonschema==2.6.0
 simplejson==3.16.0
 flask_cors==3.0.6
